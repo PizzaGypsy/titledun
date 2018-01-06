@@ -1,7 +1,8 @@
 #pragma once
 
 /*
-  This class is for setting up render-to-texture for some interesting motion blur effects.
+  This class is for setting up render-to-texture for some interesting motion blur effects,
+  emulating an actual accumulation buffer.
 */
 #include "MainApp.hpp"
 
