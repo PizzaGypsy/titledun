@@ -40,11 +40,11 @@ int TerrainManager::mk_cfg(void) {
   libconfig::Setting &tvar = root.add("terrains", libconfig::Setting::TypeGroup);
 
   try {
-	MainApp::cfg_parser.writeFile("terrains.cfg");
-	std::cerr << "New configuration successfully written to: " << "terrains.cfg" << std::endl;
+	MainApp::cfg_parser.writeFile("../cfg/terrains.cfg");
+	std::cerr << "New configuration successfully written to: " << "../cfg/terrains.cfg" << std::endl;
 	
   } catch (const libconfig::FileIOException &fioex) {
-	  std::cerr << "I/O error while writing file: " << "terrains.cfg" << std::endl;
+	  std::cerr << "I/O error while writing file: " << "../cfg/terrains.cfg" << std::endl;
 	  return(1);
   }
   return(0);
@@ -80,7 +80,7 @@ void TerrainManager::set_defaults(GeoMipTerrain* terrain, const std::string name
 
 int TerrainManager::parse_terrains() {
   try {
-	MainApp::cfg_parser.readFile("terrains.cfg");
+	MainApp::cfg_parser.readFile("../cfg/terrains.cfg");
 	
   } catch (const libconfig::FileIOException &fioex) {
 	std::cerr << "I/O error while reading file." << std::endl;
