@@ -41,6 +41,8 @@ private:
   MainApp* m_a = MainApp::get_instance();
   void make_ui_elements();
 
+  PandaAccum* buffer;
+
   NodePath camera;
 
   void pc_test();

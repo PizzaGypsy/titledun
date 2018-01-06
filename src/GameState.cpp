@@ -10,6 +10,7 @@ GameState::GameState() {
   game_fog = NULL;
   p_terrains = NULL;
   p_sky = NULL;
+  buffer = NULL;
 }
 
 void GameState::make_ui_elements() {
@@ -72,7 +73,7 @@ void GameState::enter() {
 
   //make_test_panda();
   pc_test();
-  PandaAccum* buffer = new PandaAccum();
+  buffer = new PandaAccum();
   buffer->create();
   
   //shader_attempt();
@@ -270,5 +271,8 @@ void GameState::exit() {
   p_terrains = NULL;
   delete p_sky;
   p_sky = NULL;
+
+  delete buffer;
+  buffer = NULL;
 }
 
