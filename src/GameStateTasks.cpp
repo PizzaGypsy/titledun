@@ -215,15 +215,17 @@ inline AsyncTask::DoneStatus GameState::cam_rot(GenericAsyncTask* task, void* da
 AsyncTask::DoneStatus GameState::terrain_collisions(GenericAsyncTask* task, void* data) {
   TerrainManager* terrains = (TerrainManager*)data;
   NodePath pc_node = player_node.get_parent();
-  int cell_x = pc_node.get_pos().get_x() / 0x200;
-  int cell_y = pc_node.get_pos().get_y() / 0x200;
+  int cell_x = pc_node.get_pos().get_x() / terrains->terrain_map_size;
+  int cell_y = pc_node.get_pos().get_y() / terrains->terrain_map_size;
   float elevation;
 
   try {
-	GeoMipTerrain* closest_terrain = terrains->vector_o_terrains
+	GeoMipTerrain* closest_terrain = terrains->v_terrains
 	  .at(cell_x)
 	  .at(cell_y);
-	elevation = closest_terrain->get_elevation(pc_node.get_pos().get_x() - (cell_x * 0x200), pc_node.get_pos().get_y() - (cell_y * 0x200)) * 50;
+	elevation = closest_terrain->get_elevation(
+	  pc_node.get_pos().get_x() - (cell_x * terrains->terrain_map_size),
+	  pc_node.get_pos().get_y() - (cell_y * terrains->terrain_map_size)) * 50;
 
 	if (pc_node.get_z() <= elevation) {
 	  pc_node.set_z(elevation);

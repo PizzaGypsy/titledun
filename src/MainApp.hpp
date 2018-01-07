@@ -53,7 +53,6 @@
 #include <collisionHandlerQueue.h>
 
 #include "AppStateManager.hpp"
-//#include "AccumulationBuffer.hpp"
 #include "GraphicalInterface.hpp"
 #include "UtilFunctions.hpp"
 
@@ -81,24 +80,24 @@ public:
   bool mouse_pressed[3] = {false, false, false};
   bool key_pressed[6] = {false, false, false, false, false, false};
 
-  AppStateManager* m_pAppStateManager;
+  AppStateManager* p_app_state_manager;
 
   //UI------------------------------------------
-  PT(PGEntry) console_box;
+  PT(PGEntry) p_console_box;
   NodePath console_np;
-  PT(TextNode) console_text;
+  PT(TextNode) p_console_text;
   NodePath console_text_np;
 
-  PT(PGButton) main_menu_button;
+  PT(PGButton) p_main_menu_button;
   NodePath mm_button_np;
 
-  PT(PGButton) exit_menu_button;
+  PT(PGButton) p_exit_menu_button;
   NodePath exit_menu_np;
 
   static libconfig::Config cfg_parser;
 
 private:
-  static MainApp* m_pInstance;
+  static MainApp* p_instance;
 
   void setup_console();
 

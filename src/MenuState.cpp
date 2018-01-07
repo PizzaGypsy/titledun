@@ -4,14 +4,14 @@ void MenuState::play_clicked(const Event *ev, void *data) {
   PGButton* CurrentButton=(PGButton *)data;
   
   printf("%s has been pressed.\n",CurrentButton->get_name().c_str());
-  MainApp::get_instance()->m_pAppStateManager->
-	change_app_state(MainApp::get_instance()->m_pAppStateManager->find_by_name("GameState"));
+  MainApp::get_instance()->p_app_state_manager->
+	change_app_state(MainApp::get_instance()->p_app_state_manager->find_by_name("GameState"));
 }
 
 void MenuState::cgen_clicked(const Event *ev, void *data) {
   PGButton* current_button=(PGButton *)data;
-  MainApp::get_instance()->m_pAppStateManager->
-	change_app_state(MainApp::get_instance()->m_pAppStateManager->find_by_name("CharacterGen"));
+  MainApp::get_instance()->p_app_state_manager->
+	change_app_state(MainApp::get_instance()->p_app_state_manager->find_by_name("CharacterGen"));
 }
 
 MenuState::MenuState() {}

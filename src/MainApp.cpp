@@ -3,69 +3,68 @@
 #include "MenuState.hpp"
 #include "GameState.hpp"
 #include "CharacterGen.hpp"
-//#include "PauseState.hpp"
 
-MainApp* MainApp::m_pInstance = NULL;
+MainApp* MainApp::p_instance = NULL;
 libconfig::Config MainApp::cfg_parser;
 
 MainApp* MainApp::get_instance() {
-  if (m_pInstance == NULL) {
-	m_pInstance = new MainApp;
+  if (p_instance == NULL) {
+	p_instance = new MainApp;
   }
   
-  return m_pInstance;
+  return p_instance;
 }
 
 void MainApp::reset_instance() {
-  delete m_pInstance;
-  m_pInstance = NULL;
+  delete p_instance;
+  p_instance = NULL;
 }
 
 MainApp::MainApp()
 {
-	m_pAppStateManager = 0;
-	console_box = 0;
-	console_text = 0;
-	main_menu_button = 0;
-	exit_menu_button = 0;
+	p_app_state_manager = NULL;
+	p_console_box = NULL;
+	p_console_text = NULL;
+	p_main_menu_button = NULL;
+	p_exit_menu_button = NULL;
 }
 
 MainApp::~MainApp()
 {
-  m_pAppStateManager->exit_app_state(m_pAppStateManager->find_by_name("GameState"));
-  delete m_pAppStateManager;
+  p_app_state_manager->exit_app_state(p_app_state_manager->find_by_name("GameState"));
+  delete p_app_state_manager;
 
   framework.close_framework();
 }
 
 void MainApp::setup_console() {
-  console_box = new PGEntry("console");
-  console_box->setup(15, 1);
+  p_console_box = new PGEntry("console");
+  p_console_box->setup(15, 1);
 
   console_np = window->get_aspect_2d()
-	.attach_new_node(console_box);
+	.attach_new_node(p_console_box);
   
   console_np.set_scale(0.05);
   console_np.set_pos(-1, 0, -0.25);
   console_np.hide();
 
-  console_text = new TextNode("console text");
-  console_text->set_text("User Shell\n");
-  console_text->set_wordwrap(15.0);
-  //console_text->set_max_rows(5);
+  p_console_text = new TextNode("console text");
+  p_console_text->set_text("User Shell\n");
+  p_console_text->set_wordwrap(15.0);
+  //p_console_text->set_max_rows(5);
   
   console_text_np = window->get_aspect_2d()
-	.attach_new_node(console_text);
+	.attach_new_node(p_console_text);
 
   
   console_text_np.reparent_to(console_np);
   //console_text_np.set_scale(0.05);
   console_text_np.set_pos(0, 0, 1);
 
-  framework.define_key(console_box->get_accept_event(KeyboardButton::enter()),
+  framework.define_key(p_console_box->get_accept_event(KeyboardButton::enter()),
 					   "accept",
 					   &GraphicalInterface::console_callback,
-					   console_box);
+					   p_console_box);
 }
 
 void MainApp::start()
@@ -89,12 +88,12 @@ void MainApp::start()
 
   setup_console();
 
-  m_pAppStateManager = new AppStateManager();
+  p_app_state_manager = new AppStateManager();
 
-  MenuState::create(m_pAppStateManager, "MenuState");
-  GameState::create(m_pAppStateManager, "GameState");
-  CharacterGen::create(m_pAppStateManager, "CharacterGen");
-  m_pAppStateManager->start(m_pAppStateManager->find_by_name("MenuState"));
+  MenuState::create(p_app_state_manager, "MenuState");
+  GameState::create(p_app_state_manager, "GameState");
+  CharacterGen::create(p_app_state_manager, "CharacterGen");
+  p_app_state_manager->start(p_app_state_manager->find_by_name("MenuState"));
 
   //framework.enable_default_keys();
 

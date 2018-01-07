@@ -7,41 +7,41 @@ NodePath player_node;
 
 //NodePath panda_actor;
 GameState::GameState() {
-  game_fog = NULL;
+  p_game_fog = NULL;
   p_terrains = NULL;
   p_sky = NULL;
-  buffer = NULL;
+  p_acc_buffer = NULL;
 }
 
 void GameState::make_ui_elements() {
   //main menu button
-  m_a->main_menu_button = new PGButton("Main Menu");
-  m_a->main_menu_button->setup("Main Menu");
+  m_a->p_main_menu_button = new PGButton("Main Menu");
+  m_a->p_main_menu_button->setup("Main Menu");
 
-  m_a->mm_button_np = m_a->window->get_aspect_2d().attach_new_node(m_a->main_menu_button);
+  m_a->mm_button_np = m_a->window->get_aspect_2d().attach_new_node(m_a->p_main_menu_button);
   m_a->mm_button_np.set_scale(0.05);
   m_a->mm_button_np.hide();
 
   //callback
-  m_a->framework.define_key(m_a->main_menu_button->get_click_event(MouseButton::one()),
+  m_a->framework.define_key(m_a->p_main_menu_button->get_click_event(MouseButton::one()),
 							"button press",
 							&GraphicalInterface::main_menu_button_clicked,
-							m_a->main_menu_button);
+							m_a->p_main_menu_button);
 
   //exit button
-  m_a->exit_menu_button = new PGButton("Exit Button");
-  m_a->exit_menu_button->setup("Exit");
+  m_a->p_exit_menu_button = new PGButton("Exit Button");
+  m_a->p_exit_menu_button->setup("Exit");
 
-  m_a->exit_menu_np = m_a->window->get_aspect_2d().attach_new_node(m_a->exit_menu_button);
+  m_a->exit_menu_np = m_a->window->get_aspect_2d().attach_new_node(m_a->p_exit_menu_button);
   m_a->exit_menu_np.set_scale(0.05);
   m_a->exit_menu_np.set_pos(0, 0, -0.25);
   m_a->exit_menu_np.hide();
 
   //callback
-  m_a->framework.define_key(m_a->exit_menu_button->get_click_event(MouseButton::one()),
+  m_a->framework.define_key(m_a->p_exit_menu_button->get_click_event(MouseButton::one()),
 							"button press",
 							&GraphicalInterface::exit_button_clicked,
-							m_a->exit_menu_button);
+							m_a->p_exit_menu_button);
 }
 
 /*static*/ NodePath GameState::panda_actor;
@@ -52,10 +52,10 @@ void GameState::enter() {
   Controls::define_keys();
   make_ui_elements();
 
-  if (!game_fog) {
-	game_fog = new Fog("foggy");
-	game_fog->set_color(0.5, 0, 1);
-	game_fog->set_exp_density(0.001);
+  if (!p_game_fog) {
+	p_game_fog = new Fog("foggy");
+	p_game_fog->set_color(0.5, 0, 1);
+	p_game_fog->set_exp_density(0.001);
   }
   camera = MainApp::get_instance()->window->get_camera_group();
 
@@ -73,8 +73,8 @@ void GameState::enter() {
 
   //make_test_panda();
   pc_test();
-  buffer = new PandaAccum();
-  buffer->create();
+  p_acc_buffer = new PandaAccum();
+  p_acc_buffer->create();
   
   //shader_attempt();
 
@@ -256,10 +256,10 @@ void GameState::exit() {
   m_a->window->get_render().clear_fog();
 
   m_a->mm_button_np.remove_node();
-  m_a->main_menu_button = NULL;
+  m_a->p_main_menu_button = NULL;
 
   m_a->exit_menu_np.remove_node();
-  m_a->exit_menu_button = NULL;
+  m_a->p_exit_menu_button = NULL;
 
   camera.reparent_to(MainApp::get_instance()->window->get_render());
   GameState::panda_actor.remove_node();
@@ -272,7 +272,7 @@ void GameState::exit() {
   delete p_sky;
   p_sky = NULL;
 
-  delete buffer;
-  buffer = NULL;
+  delete p_acc_buffer;
+  p_acc_buffer = NULL;
 }
 

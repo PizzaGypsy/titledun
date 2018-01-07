@@ -41,13 +41,13 @@ private:
   MainApp* m_a = MainApp::get_instance();
   void make_ui_elements();
 
-  PandaAccum* buffer;
+  PandaAccum* p_acc_buffer;
 
   NodePath camera;
 
   void pc_test();
 
-  Fog *game_fog;
+  Fog *p_game_fog;
 
   AsyncTask *camera_rotation_task = NULL;
   AsyncTask *move_player_task = NULL;

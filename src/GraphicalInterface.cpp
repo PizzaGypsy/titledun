@@ -19,7 +19,7 @@ void GraphicalInterface::menu_controls(const Event* e, void* data) {
   }
 
   //escape
-  else if (e->get_name() == "escape" && MainApp::get_instance()->main_menu_button != NULL) {
+  else if (e->get_name() == "escape" && MainApp::get_instance()->p_main_menu_button != NULL) {
 	if (show_mmenu == false) {
 	  MainApp::get_instance()->mm_button_np.show();
 	  MainApp::get_instance()->exit_menu_np.show();
@@ -35,22 +35,22 @@ void GraphicalInterface::menu_controls(const Event* e, void* data) {
 }
 
 void GraphicalInterface::console_callback(const Event *e, void *data) {
-  PGEntry* console_box=(PGEntry *)data;
+  PGEntry* p_console_box=(PGEntry *)data;
   
-  if (console_box->get_plain_text() != "") {
-	MainApp::get_instance()->console_text->append_text(console_box->get_plain_text() + '\n');
+  if (p_console_box->get_plain_text() != "") {
+	MainApp::get_instance()->p_console_text->append_text(p_console_box->get_plain_text() + '\n');
   
-	MainApp::get_instance()->console_text_np.set_pos(0, 0, MainApp::get_instance()->console_text->get_num_rows() - 1);
+	MainApp::get_instance()->console_text_np.set_pos(0, 0, MainApp::get_instance()->p_console_text->get_num_rows() - 1);
   
-	std::cout << "text in console: " << console_box->get_plain_text() << std::endl;
-	console_box->set_text("");
+	std::cout << "text in console: " << p_console_box->get_plain_text() << std::endl;
+	p_console_box->set_text("");
   }
 }
 
 void GraphicalInterface::main_menu_button_clicked(const Event *e, void *data) {
   //from some other state to MenuState
-  MainApp::get_instance()->m_pAppStateManager->change_app_state(MainApp::get_instance()->
-																m_pAppStateManager->find_by_name("MenuState"));
+  MainApp::get_instance()->p_app_state_manager->change_app_state(MainApp::get_instance()->
+																p_app_state_manager->find_by_name("MenuState"));
 }
 
 void GraphicalInterface::exit_button_clicked(const Event *e, void *data) {

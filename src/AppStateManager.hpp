@@ -36,8 +36,8 @@ public:
 protected:
 	void init(AppState *state);
 
-	std::vector<AppState*>		m_ActiveStateStack;
-	std::vector<state_info>		m_States;
-	bool						m_bShutdown;
+	std::vector<AppState*> active_state_stack;
+	std::vector<state_info>	states;
+	bool b_shutdown;
 };
 
