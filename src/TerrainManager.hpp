@@ -27,7 +27,7 @@ public:
 
   GeoMipTerrain find_closest_terrain();
 
-  static const int terrain_map_size = 0x200;
+  static const int terrain_map_size = 0x800; //0x200
 
 private:
   NodePath terrain_objects_np = MainApp::get_instance()->window->get_render().attach_new_node("Terrain Node");

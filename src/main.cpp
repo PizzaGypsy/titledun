@@ -1,5 +1,4 @@
 #include "MainApp.hpp"
-#include "TerrainManager.hpp"
 
 int main(int argc, char** argv) {
   //create application object and get our singleton
@@ -11,7 +10,7 @@ int main(int argc, char** argv) {
   app->window = app->framework.open_window();
 
   app->start();
-
+  
   app->reset_instance();
 
   return 0;
