@@ -18,8 +18,11 @@ set(CMAKE_CXX_FLAGS_DEBUG "-g -mtune=native")
 set(CMAKE_INSTALL_PREFIX "${CMAKE_CURRENT_BINARY_DIR}/bin")
 
 option(PANDA_HAS_EIGEN "Enable if Panda3d was built with Eigen." TRUE)
+option(PANDA_HAS_PYTHON "Enable if Panda3d was built with python support." FALSE)
 
-set(PYTHON_INCLUDE "/usr/include/python2.7" CACHE FILEPATH "Location of python sources.")
+if (PANDA_HAS_PYTHON)
+	set(PYTHON_INCLUDE "/usr/include/python2.7" CACHE FILEPATH "Location of python sources.")
+endif ()
 
 if (PANDA_HAS_EIGEN)
 	set(EIGEN_INCLUDE "/usr/include/eigen3" CACHE FILEPATH "Location of Eigen sources.")
@@ -72,7 +75,9 @@ endif ()
 
 include_directories(
 	${PANDA_INCLUDE}
-	${PYTHON_INCLUDE}
+	if (PANDA_HAS_PYTHON)
+		${PYTHON_INCLUDE}
+	endif ()
 	
 	if (PANDA_HAS_EIGEN)
 		${EIGEN_INCLUDE}
@@ -82,27 +87,35 @@ include_directories(
 if (UNIX)
 	set(SUFFIX "so")
 endif ()
-if (MINGW)
+if (MSVC)
 	set(SUFFIX "lib")
 endif ()
 
-target_link_libraries(${PROJNAME}
-	-lpthread
-	-lconfig++
+set(PANDA_LIBS
 	${PANDA_PREFIX}/libp3framework.${SUFFIX}
 	${PANDA_PREFIX}/libpanda.${SUFFIX}
 	${PANDA_PREFIX}/libpandaexpress.${SUFFIX}
 	${PANDA_PREFIX}/libp3dtool.${SUFFIX}
-	${PANDA_PREFIX}/libp3dtoolconfig.${SUFFIX}
-	${PANDA_PREFIX}/libp3pystub.a
+	${PANDA_PREFIX}/libp3dtoolconfig.${SUFFIX})
+
+if (PANDA_HAS_PYTHON)
+	list(APPEND PANDA_LIBS ${PANDA_PREFIX}/libp3pystub.a)
+endif ()
+
+list(APPEND PANDA_LIBS
 	${PANDA_PREFIX}/libp3direct.${SUFFIX}
-	${PANDA_PREFIX}/libp3eggbase.a
+	${PANDA_PREFIX}/libp3eggbase.a)
+
+target_link_libraries(${PROJNAME}
+	-lpthread
+	-lconfig++
+	${PANDA_LIBS}
 ) 
 
 file(MAKE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/bin)
 file(MAKE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/media)
 
 
-if(MINGW OR UNIX)
+if(MSVC OR UNIX)
         set(EXECUTABLE_OUTPUT_PATH ${PROJECT_BINARY_DIR}/bin)
-endif(MINGW OR UNIX)
+endif(MSVC OR UNIX)
