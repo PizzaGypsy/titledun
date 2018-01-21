@@ -4,3 +4,7 @@ CMakeFiles/
 cmake_install.cmake
 Makefile
 CMakeCache.txt
+*.sln
+*.VC.db
+*.vcxproj*
+*.vcxproj

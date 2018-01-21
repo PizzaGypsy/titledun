@@ -13,7 +13,7 @@ set(CMAKE_DEBUG_POSTFIX "_d")
 set(CMAKE_CXX_FLAGS "-std=gnu++11")
 set(CMAKE_CXX_FLAGS_RELEASE "-O3 -DNDEBUG -mtune=generic")
 set(CMAKE_CXX_FLAGS_RELWITHDEBINFO "-O2 -g -DNDEBUG -mtune=generic")
-set(CMAKE_CXX_FLAGS_DEBUG "-g -mtune=native")
+set(CMAKE_CXX_FLAGS_DEBUG "-g -mtune=generic")
 
 set(CMAKE_INSTALL_PREFIX "${CMAKE_CURRENT_BINARY_DIR}/bin")
 
@@ -21,15 +21,24 @@ option(PANDA_HAS_EIGEN "Enable if Panda3d was built with Eigen." TRUE)
 option(PANDA_HAS_PYTHON "Enable if Panda3d was built with python support." FALSE)
 
 if (PANDA_HAS_PYTHON)
-	set(PYTHON_INCLUDE "/usr/include/python2.7" CACHE FILEPATH "Location of python sources.")
+	set(PYTHON_INCLUDE "/usr/include/python2.7" CACHE FILEPATH "Location of python sources." CACHE FILEPATH "Path to python includes.")
 endif ()
 
 if (PANDA_HAS_EIGEN)
-	set(EIGEN_INCLUDE "/usr/include/eigen3" CACHE FILEPATH "Location of Eigen sources.")
+	set(EIGEN_INCLUDE "/usr/include/eigen3" CACHE FILEPATH "Location of Eigen sources." CACHE FILEPATH "Path to eigen source.")
 endif ()
 
 set(PANDA_INCLUDE "/usr/local/include/panda3d" CACHE FILEPATH "Location of Panda3d sources.")
 set(PANDA_PREFIX "/usr/local/lib/panda3d/" CACHE FILEPATH "The path prefix to Panda3d libraries.")
+
+if (MSVC)
+	set(LIBCONFIG_BIN "" CACHE FILEPATH "The path prefix to libconfig libraries.")
+	set(LIBCONFIG_INCLUDE "" CACHE FILEPATH "The path prefix to libconfig source.")
+elseif (UNIX)
+	set(LIBCONFIG_BIN "-lconfig++")
+endif ()
+
+
 
 #link_directories(${PANDA_LIBS})
 
@@ -74,6 +83,7 @@ if (CMAKE_BUILD_TYPE STREQUAL "Debug")
 endif ()
 
 include_directories(
+	${LIBCONFIG_INCLUDE}
 	${PANDA_INCLUDE}
 	if (PANDA_HAS_PYTHON)
 		${PYTHON_INCLUDE}
@@ -85,30 +95,33 @@ include_directories(
 	)
 
 if (UNIX)
-	set(SUFFIX "so")
+	set(SUFFIX_DLL "so")
+	set(SUFFIX_STATIC "a")
 endif ()
 if (MSVC)
-	set(SUFFIX "lib")
+	set(SUFFIX_DLL "lib")
+	set(SUFFIX_STATIC "lib")
 endif ()
 
 set(PANDA_LIBS
-	${PANDA_PREFIX}/libp3framework.${SUFFIX}
-	${PANDA_PREFIX}/libpanda.${SUFFIX}
-	${PANDA_PREFIX}/libpandaexpress.${SUFFIX}
-	${PANDA_PREFIX}/libp3dtool.${SUFFIX}
-	${PANDA_PREFIX}/libp3dtoolconfig.${SUFFIX})
+	${PANDA_PREFIX}/libp3framework.${SUFFIX_DLL}
+	${PANDA_PREFIX}/libpanda.${SUFFIX_DLL}
+	${PANDA_PREFIX}/libpandaexpress.${SUFFIX_DLL}
+	${PANDA_PREFIX}/libp3dtool.${SUFFIX_DLL}
+	${PANDA_PREFIX}/libp3dtoolconfig.${SUFFIX_DLL})
 
 if (PANDA_HAS_PYTHON)
-	list(APPEND PANDA_LIBS ${PANDA_PREFIX}/libp3pystub.a)
+	list(APPEND PANDA_LIBS ${PANDA_PREFIX}/libp3pystub.${SUFFIX_STATIC})
 endif ()
 
 list(APPEND PANDA_LIBS
-	${PANDA_PREFIX}/libp3direct.${SUFFIX}
-	${PANDA_PREFIX}/libp3eggbase.a)
+	${PANDA_PREFIX}/libp3direct.${SUFFIX_DLL}
+	${PANDA_PREFIX}/libp3eggbase.${SUFFIX_STATIC})
 
 target_link_libraries(${PROJNAME}
 	-lpthread
-	-lconfig++
+	#-lconfig++
+	${LIBCONFIG_BIN}
 	${PANDA_LIBS}
 ) 
 
