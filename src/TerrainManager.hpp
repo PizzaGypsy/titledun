@@ -6,6 +6,7 @@
 */
 
 #include "MainApp.hpp"
+#include "LispSystem.hpp"
 
 class TerrainManager {
 public:
@@ -14,13 +15,13 @@ public:
 
   void build_terrains();
   int parse_terrains();
+  int parse_terrains_lisp();
   void set_defaults(GeoMipTerrain* terrain, const std::string name, const std::string texture, int x, int y);
 
   void destroy_terrains();
   void hide_terrains();
   
   std::vector< std::vector <GeoMipTerrain* >> v_terrains;
-  //std::vector< LPoint2 > positions;
   NodePath *p_terrain_node;
 
   CollisionHandlerQueue* p_queue;
@@ -37,14 +38,9 @@ private:
 
   void enable_collisions();
 
-  bool cfg_read;
-
-  int mk_cfg(void);
-
-  static libconfig::Config terrain_cfg;
-
   GeoMipTerrain* p_terrain;
 
   CollisionTraverser traverser;
 
+  int check_cfg_vars();
 };

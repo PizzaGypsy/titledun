@@ -31,15 +31,6 @@ endif ()
 set(PANDA_INCLUDE "/usr/local/include/panda3d" CACHE FILEPATH "Location of Panda3d sources.")
 set(PANDA_PREFIX "/usr/local/lib/panda3d/" CACHE FILEPATH "The path prefix to Panda3d libraries.")
 
-if (MSVC)
-	set(LIBCONFIG_BIN "" CACHE FILEPATH "The path prefix to libconfig libraries.")
-	set(LIBCONFIG_INCLUDE "" CACHE FILEPATH "The path prefix to libconfig source.")
-elseif (UNIX)
-	set(LIBCONFIG_BIN "-lconfig++")
-endif ()
-
-
-
 #link_directories(${PANDA_LIBS})
 
 set(HDRS
@@ -56,6 +47,7 @@ set(HDRS
 	src/PlayerCharacter.hpp
 	src/UtilFunctions.hpp
 	src/AccumulationBuffer.hpp
+	src/LispSystem.hpp
 )
 
 set(SRCS
@@ -72,6 +64,7 @@ set(SRCS
 	src/PlayerCharacter.cpp
 	src/UtilFunctions.cpp
 	src/AccumulationBuffer.cpp
+	src/LispSystem.cpp
 )
 
 add_executable(${PROJNAME} WIN32 ${HDRS} ${SRCS})
@@ -83,7 +76,6 @@ if (CMAKE_BUILD_TYPE STREQUAL "Debug")
 endif ()
 
 include_directories(
-	${LIBCONFIG_INCLUDE}
 	${PANDA_INCLUDE}
 	if (PANDA_HAS_PYTHON)
 		${PYTHON_INCLUDE}
@@ -120,8 +112,8 @@ list(APPEND PANDA_LIBS
 
 target_link_libraries(${PROJNAME}
 	-lpthread
-	#-lconfig++
-	${LIBCONFIG_BIN}
+	-lecl
+	-lgc
 	${PANDA_LIBS}
 ) 
 

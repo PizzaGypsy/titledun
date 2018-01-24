@@ -11,8 +11,6 @@
 #include <vector>
 #include <stdlib.h>
 
-#include <libconfig.h++>
-
 #include <pandaFramework.h>
 #include <pandaSystem.h>
 
@@ -66,8 +64,6 @@ public:
 
   WindowProperties props;
 
-  libconfig::Config cfg;
-
   static MainApp* get_instance();
   
   static void reset_instance();
@@ -93,8 +89,6 @@ public:
 
   PT(PGButton) p_exit_menu_button;
   NodePath exit_menu_np;
-
-  static libconfig::Config cfg_parser;
 
 private:
   static MainApp* p_instance;

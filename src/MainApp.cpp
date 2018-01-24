@@ -5,7 +5,6 @@
 #include "CharacterGen.hpp"
 
 MainApp* MainApp::p_instance = NULL;
-libconfig::Config MainApp::cfg_parser;
 
 MainApp* MainApp::get_instance() {
   if (p_instance == NULL) {
