@@ -2,10 +2,10 @@
 
 inline AsyncTask::DoneStatus SkyManager::move_sky(GenericAsyncTask* task, void* data) {
   SkyManager* instance = (SkyManager*) data;
-  //p_instance->sky_node->set_pos(MainApp::get_instance()->window->get_camera_group().get_pos());
+  //p_instance->sky_node->set_pos(M_A->window->get_camera_group().get_pos());
   
   //maybe improve this later?
-  instance->sky_node->set_pos(MainApp::get_instance()->window->get_camera_group().get_parent().get_parent().get_pos());
+  instance->sky_node->set_pos(M_A->window->get_camera_group().get_parent().get_parent().get_pos());
 
   return AsyncTask::DS_cont;
 }
@@ -32,13 +32,14 @@ SkyManager::~SkyManager() {
 
 void SkyManager::create_sky() {
   if (sky_node == NULL) {
-	sky = MainApp::get_instance()->
-	  window->load_model(MainApp::get_instance()->framework.get_models(), "../media/models/skydome.egg");
+	sky = M_A->
+	  window->load_model(M_A->framework.get_models(), "../media/models/skydome.egg");
 	
 	sky.look_at((PN_stdfloat)0.0, (PN_stdfloat)0.0, (PN_stdfloat)90.0);
 
 	if (!sky_tex) {
-	  sky_tex = TexturePool::get_global_ptr()->load_texture("../media/textures/sky_twighlight_psphere.png", 0, false);
+	  //sky_tex = TexturePool::get_global_ptr()->load_texture("../media/textures/sky_twighlight_psphere.png", 0, false);
+	  sky_tex = TexturePool::get_global_ptr()->load_texture("../media/textures/sky2.png", 0, false);
 	}
 	sky.set_texture(sky_tex, 0);
 
@@ -46,9 +47,10 @@ void SkyManager::create_sky() {
 	sky.set_bin("background", 0);
 	sky.set_depth_write(false);
 	sky.set_compass();
-	sky.reparent_to(MainApp::get_instance()->window->get_render());
-	//sky.reparent_to(MainApp::get_instance()->window->get_camera_group());
+	sky.reparent_to(M_A->window->get_render());
+	//sky.reparent_to(M_A->window->get_camera_group());
 	sky.set_light_off(0);
+	sky.set_fog_off();
 
 	sky_node = &sky;
 
@@ -65,9 +67,9 @@ void SkyManager::create_sun() {
   d_light_sun->set_color(LVecBase4(0.4, 0.5, 1.0, 1.0));
   d_light_sun->set_shadow_caster(true, 0x200, 0x200);
 
-  d_light_sun_np = MainApp::get_instance()->window->get_render().attach_new_node(d_light_sun);
+  d_light_sun_np = M_A->window->get_render().attach_new_node(d_light_sun);
   d_light_sun_np.set_hpr(180, 260, 0);
-  MainApp::get_instance()->window->get_render().set_light(d_light_sun_np);
+  M_A->window->get_render().set_light(d_light_sun_np);
   sun_node = &d_light_sun_np;
 
   if (move_sun_task == NULL) {
@@ -82,8 +84,8 @@ void SkyManager::set_ambient_light() {
   a_light = new AmbientLight("ambient light");
   a_light->set_color(LVecBase4(0.2, 0.1, 0.1, 1));
 
-  a_light_np = MainApp::get_instance()->window->get_render().attach_new_node(a_light);
-  MainApp::get_instance()->window->get_render().set_light(a_light_np);
+  a_light_np = M_A->window->get_render().attach_new_node(a_light);
+  M_A->window->get_render().set_light(a_light_np);
 
   ambient_node = &a_light_np;
 }
@@ -91,10 +93,13 @@ void SkyManager::set_ambient_light() {
 void SkyManager::create_fog() {
   if (!fog_node) {
 	fog_node = new Fog("foggy");
-	fog_node->set_color(0.5, 0, 1);
-	fog_node->set_exp_density(0.001);
+	//fog_node->set_color(0.5, 0, 1);
+	fog_node->set_color(0.5, 0.5, 0.5);
+	
+	fog_node->set_mode(Fog::Mode::M_exponential);
+	fog_node->set_exp_density(0.005);
   }
-  MainApp::get_instance()->window->get_render().set_fog(fog_node);
+  M_A->window->get_render().set_fog(fog_node);
 }
 
 void SkyManager::destroy_sky() {
@@ -115,7 +120,7 @@ void SkyManager::destroy_sky() {
   }
 
   if (ambient_node) {
-	MainApp::get_instance()->window->get_render().clear_light();
+	M_A->window->get_render().clear_light();
 	a_light_np.remove_node();
 	ambient_node = NULL;
   }

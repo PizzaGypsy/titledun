@@ -10,6 +10,9 @@
 #include <iostream>
 #include <vector>
 #include <stdlib.h>
+#include <thread>
+#include <mutex>
+#include <future>
 
 #include <pandaFramework.h>
 #include <pandaSystem.h>
@@ -49,10 +52,17 @@
 #include <bitMask.h>
 #include <collisionHandler.h>
 #include <collisionHandlerQueue.h>
+#include <pnmFileTypeRegistry.h>
+#include <textureStagePool.h>
+#include <auto_bind.h>
+#include <animControlCollection.h>
 
+#include "ModuleSystem.hpp"
 #include "AppStateManager.hpp"
 #include "GraphicalInterface.hpp"
 #include "UtilFunctions.hpp"
+
+#define M_A MainApp::get_instance()
 
 class MainApp
 {

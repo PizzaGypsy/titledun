@@ -1,5 +1,7 @@
 #include "MainApp.hpp"
+
 #include "LispSystem.hpp"
+#include "LispAPI.hpp"
 
 int main(int argc, char** argv) {
   //create application object and get our singleton
@@ -7,6 +9,9 @@ int main(int argc, char** argv) {
 
   LispSystem* ecl = new LispSystem;
   ecl->initialise(argc, argv);
+  LispAPI::register_functions();
+  cl_object cl_ptr = LispAPI::send_pointer_address(ecl);
+  LispAPI::return_pointer_address(cl_ptr);
   
   app->framework.open_framework(argc, argv);
   app->framework.set_window_title("Untitled");
@@ -16,6 +21,8 @@ int main(int argc, char** argv) {
   app->start();
   
   app->reset_instance();
+
+  cl_shutdown();
 
   return 0;
 }

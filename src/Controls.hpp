@@ -29,52 +29,52 @@ public:
   
   static void mouse_event_handler(const Event* e, void* data) {
 	if (e->get_name() == "mouse1")
-	  MainApp::get_instance()->mouse_pressed[C_MOUSE1] = true;
+	  M_A->mouse_pressed[C_MOUSE1] = true;
 	else if (e->get_name() == "mouse1-up")
-	  MainApp::get_instance()->mouse_pressed[C_MOUSE1] = false;
+	  M_A->mouse_pressed[C_MOUSE1] = false;
   
 	else if (e->get_name() == "mouse2")
-	  MainApp::get_instance()->mouse_pressed[C_MOUSE2] = true;
+	  M_A->mouse_pressed[C_MOUSE2] = true;
 	else if (e->get_name() == "mouse2-up")
-	  MainApp::get_instance()->mouse_pressed[C_MOUSE2] = false;
+	  M_A->mouse_pressed[C_MOUSE2] = false;
 
 	else if (e->get_name() == "mouse3")
-	  MainApp::get_instance()->mouse_pressed[C_MOUSE3] = true;
+	  M_A->mouse_pressed[C_MOUSE3] = true;
 	else if (e->get_name() == "mouse3-up")
-	  MainApp::get_instance()->mouse_pressed[C_MOUSE3] = false;
+	  M_A->mouse_pressed[C_MOUSE3] = false;
   }
 
   static void key_event_handler(const Event* e, void* data) {
 	std::cout << "event: " << e->get_name() << std::endl;
 	if (e->get_name() == "escape")
-	  MainApp::get_instance()->key_pressed[ESC_KEY] = true;
+	  M_A->key_pressed[ESC_KEY] = true;
 	else if (e->get_name() == "escape-up")
-	  MainApp::get_instance()->key_pressed[ESC_KEY] = false;
+	  M_A->key_pressed[ESC_KEY] = false;
 
 	else if (e->get_name() == "`")
-	  MainApp::get_instance()->key_pressed[TILDE_KEY] = true;
+	  M_A->key_pressed[TILDE_KEY] = true;
 	else if (e->get_name() == "`-up")
-	  MainApp::get_instance()->key_pressed[TILDE_KEY] = false;
+	  M_A->key_pressed[TILDE_KEY] = false;
 
 	else if (e->get_name() == "e")
-	  MainApp::get_instance()->key_pressed[E_KEY] = true;
+	  M_A->key_pressed[E_KEY] = true;
 	else if (e->get_name() == "e-up")
-	  MainApp::get_instance()->key_pressed[E_KEY] = false;
+	  M_A->key_pressed[E_KEY] = false;
 
 	else if (e->get_name() == "d")
-	  MainApp::get_instance()->key_pressed[D_KEY] = true;
+	  M_A->key_pressed[D_KEY] = true;
 	else if (e->get_name() == "d-up")
-	  MainApp::get_instance()->key_pressed[D_KEY] = false;
+	  M_A->key_pressed[D_KEY] = false;
 
 	else if (e->get_name() == "s")
-	  MainApp::get_instance()->key_pressed[S_KEY] = true;
+	  M_A->key_pressed[S_KEY] = true;
 	else if (e->get_name() == "s-up")
-	  MainApp::get_instance()->key_pressed[S_KEY] = false;
+	  M_A->key_pressed[S_KEY] = false;
 
 	else if (e->get_name() == "f")
-	  MainApp::get_instance()->key_pressed[F_KEY] = true;
+	  M_A->key_pressed[F_KEY] = true;
 	else if (e->get_name() == "f-up")
-	  MainApp::get_instance()->key_pressed[F_KEY] = false;
+	  M_A->key_pressed[F_KEY] = false;
   }
   
   static void define_keys();

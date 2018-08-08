@@ -12,6 +12,7 @@
 #include "SkyManager.hpp"
 #include "Controls.hpp"
 #include "PlayerCharacter.hpp"
+#include "LispAPI.hpp"
 
 class GameState : public AppState {
 public:
@@ -25,10 +26,10 @@ public:
   void resume();
   static NodePath panda_actor;
 
-  PlayerCharacter ich_bin;
+  PlayerCharacter* pc_obj = NULL;
 
-  TerrainManager* p_terrains;
-  SkyManager* p_sky;
+  TerrainManager* p_terrains = NULL;
+  SkyManager* p_sky = NULL;
   
 private:
   //  PT (NodePath) panda_actor;
@@ -38,16 +39,13 @@ private:
   static AsyncTask::DoneStatus move_player(GenericAsyncTask* task, void* data);
   static AsyncTask::DoneStatus terrain_collisions(GenericAsyncTask* task, void* data);
 
-  MainApp* m_a = MainApp::get_instance();
   void make_ui_elements();
 
-  PandaAccum* p_acc_buffer;
+  PandaAccum* p_acc_buffer = NULL;
 
   NodePath camera;
 
   void pc_test();
-
-  Fog *p_game_fog;
 
   AsyncTask *camera_rotation_task = NULL;
   AsyncTask *move_player_task = NULL;

@@ -6,6 +6,7 @@
 */
 
 #include "MainApp.hpp"
+#include "FullscreenRenderCard.hpp"
 
 class PandaAccum {
 public:
@@ -13,16 +14,25 @@ public:
   ~PandaAccum();
   Texture* render_to_texture();
   void create();
+  float fade_rate = 0.03; //0.05
+  float render_delay = 0.25; //0.25
+  float initial_alpha = 0.75; //0.75
   
 private:
-  PT(GraphicsOutput) accum_buffer;
-  PT(DisplayRegion) region;
+  PT(GraphicsOutput) accum_buffer = NULL;
+  PT(GraphicsOutput) accum_buffer_two = NULL;
+  PT(DisplayRegion) region = NULL;
+  PT(DisplayRegion) region_two = NULL;
 
-  Texture* card_tex;
+  FullscreenRenderCard* card1 = NULL;
+  FullscreenRenderCard* card2 = NULL;
 
-  CardMaker* fullscreen_card = new CardMaker("fullscreen");
-  NodePath* fullscreen_node;
+  bool change = false;
   
-  AsyncTask *motion_blur_task = NULL;
+  NodePath np_camera;
+  
+  AsyncTask* motion_blur_task = NULL;
+  AsyncTask* fade_task = NULL;
   static AsyncTask::DoneStatus motion_blur(GenericAsyncTask* task, void* data);
+  static AsyncTask::DoneStatus fader(GenericAsyncTask* task, void* data);
 };

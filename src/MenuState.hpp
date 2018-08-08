@@ -23,7 +23,7 @@ private:
   PT(PGButton) play_button;
   NodePath play_np;
 
-  CardMaker* fullscreen_card = new CardMaker("fullscreen card");
+  CardMaker* fullscreen_card;
   NodePath *title_np = NULL;
   Texture* wood_tex = TexturePool::get_global_ptr()->load_texture("../media/textures/wood_plain.jpg", 0, false);
 

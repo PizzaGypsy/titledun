@@ -12,8 +12,12 @@ public:
   NodePath character;
 
   void load_player_model();
+  void load_anims();
+  void unload_anims();
 
   void remove_nodes();
+  AnimControlCollection anim_collection;
+  std::string species {""};
 private:
   NodePath outline;
 };

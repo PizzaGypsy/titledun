@@ -76,18 +76,18 @@ void MainApp::start()
   window->get_graphics_window()->request_properties(props);
 
   //window->get_graphics_window()->set_clear_color(LColorf(0, 0, 0, 1));
-  window->get_render().set_shader_auto();
-  framework.set_perpixel(true);
-  window->get_render().set_shader_auto();
+  
+  //window->get_render().set_shader_auto();
+  //framework.set_perpixel(true);
   window->get_render().set_attrib(LightRampAttrib::make_double_threshold(0.0, 0.5, 0.2, 1));
-  //window->get_render().set_color_off();
-  //window->get_render().set_attrib(ColorAttrib::make_vertex());
-
+  
   window->enable_keyboard();
 
   setup_console();
 
   p_app_state_manager = new AppStateManager();
+
+  ModuleSystem::load_module("default");
 
   MenuState::create(p_app_state_manager, "MenuState");
   GameState::create(p_app_state_manager, "GameState");

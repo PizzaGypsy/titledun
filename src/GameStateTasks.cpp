@@ -4,9 +4,8 @@
 */
 
 AsyncTask::DoneStatus GameState::move_player(GenericAsyncTask* task, void* data) {
-  MainApp* m_a = MainApp::get_instance();
   
-  if (m_a->framework.all_windows_closed() == false) {
+  if (M_A->framework.all_windows_closed() == false) {
 	//player_node.get_parent().get_node(0)->reset_prev_transform();
 	NodePath pc_node = player_node.get_parent();
 	float new_x, new_y, new_z, new_head;
@@ -17,40 +16,40 @@ AsyncTask::DoneStatus GameState::move_player(GenericAsyncTask* task, void* data)
 
 	new_head = pc_node.get_h();
 
-	if (m_a->key_pressed[E_KEY] == true) {
-	  new_x -= sin(DEG_TO_RAD * m_a->alpha) * 1.0;
-	  new_y += cos(DEG_TO_RAD * m_a->alpha) * 1.0;
+	if (M_A->key_pressed[E_KEY] == true) {
+	  new_x -= sin(DEG_TO_RAD * M_A->alpha) * 1.0;
+	  new_y += cos(DEG_TO_RAD * M_A->alpha) * 1.0;
 	  //new_z += sin(DEG_TO_RAD * m_a->beta) * 1.0;
-	  new_head = m_a->alpha + 180;
+	  new_head = M_A->alpha + 180;
 	  
-	} else if (m_a->key_pressed[D_KEY] == true) {
-	  new_x += sin(DEG_TO_RAD * m_a->alpha) * 1.0;
-	  new_y -= cos(DEG_TO_RAD * m_a->alpha) * 1.0;
+	} else if (M_A->key_pressed[D_KEY] == true) {
+	  new_x += sin(DEG_TO_RAD * M_A->alpha) * 1.0;
+	  new_y -= cos(DEG_TO_RAD * M_A->alpha) * 1.0;
 	  //new_z -= sin(DEG_TO_RAD * m_a->beta) * 1.0;
-	  new_head = m_a->alpha;
+	  new_head = M_A->alpha;
 	  
-	} if (m_a->key_pressed[S_KEY] == true) {
-	  new_x -= cos(DEG_TO_RAD * m_a->alpha) * 1.0;
-	  new_y -= sin(DEG_TO_RAD * m_a->alpha) * 1.0;
+	} if (M_A->key_pressed[S_KEY] == true) {
+	  new_x -= cos(DEG_TO_RAD * M_A->alpha) * 1.0;
+	  new_y -= sin(DEG_TO_RAD * M_A->alpha) * 1.0;
 
-	  if (m_a->key_pressed[E_KEY]) {
-		new_head = m_a->alpha - 135;
-	  } else if (m_a->key_pressed[D_KEY]) {
-		new_head = m_a->alpha - 45;
+	  if (M_A->key_pressed[E_KEY]) {
+		new_head = M_A->alpha - 135;
+	  } else if (M_A->key_pressed[D_KEY]) {
+		new_head = M_A->alpha - 45;
 	  } else {
-		new_head = m_a->alpha - 90;
+		new_head = M_A->alpha - 90;
 	  }
 	  
-	} else if (m_a->key_pressed[F_KEY]) {
-	  new_x += cos(DEG_TO_RAD * m_a->alpha) * 1.0;
-	  new_y += sin(DEG_TO_RAD * m_a->alpha) * 1.0;
+	} else if (M_A->key_pressed[F_KEY]) {
+	  new_x += cos(DEG_TO_RAD * M_A->alpha) * 1.0;
+	  new_y += sin(DEG_TO_RAD * M_A->alpha) * 1.0;
 
-	  if(m_a->key_pressed[E_KEY]) {
-		new_head = m_a->alpha + 135;
-	  } else if (m_a->key_pressed[D_KEY]) {
-		new_head = m_a->alpha + 45;
+	  if(M_A->key_pressed[E_KEY]) {
+		new_head = M_A->alpha + 135;
+	  } else if (M_A->key_pressed[D_KEY]) {
+		new_head = M_A->alpha + 45;
 	  } else {
-		new_head = m_a->alpha + 90;
+		new_head = M_A->alpha + 90;
 	  }
 	}
 	pc_node.set_pos(new_x, new_y, new_z);
@@ -62,11 +61,12 @@ AsyncTask::DoneStatus GameState::move_player(GenericAsyncTask* task, void* data)
   }
 }
 
+bool moving = true;
 AsyncTask::DoneStatus GameState::move_player_noclip(GenericAsyncTask* task, void* data) {
-  MainApp* m_a = MainApp::get_instance();
+  PlayerCharacter* pc_obj = (PlayerCharacter*)data;
+  float speed = 0.5;
   
-  if (m_a->framework.all_windows_closed() == false) {
-	//player_node.get_parent().get_node(0)->reset_prev_transform();
+  if (M_A->framework.all_windows_closed() == false) {
 	NodePath pc_node = player_node.get_parent();
 	float new_x, new_y, new_z, new_head;
 
@@ -76,7 +76,7 @@ AsyncTask::DoneStatus GameState::move_player_noclip(GenericAsyncTask* task, void
 
 	new_head = pc_node.get_h();
 
-	if (m_a->key_pressed[E_KEY] == true) {
+	if (M_A->key_pressed[E_KEY] == true) {
 	  /*
 		player_node.get_parent().
 		//set_fluid_pos(
@@ -85,49 +85,61 @@ AsyncTask::DoneStatus GameState::move_player_noclip(GenericAsyncTask* task, void
 		player_node.get_parent().get_pos().get_y() - 1.0,
 		player_node.get_parent().get_pos().get_z());*/
 
-	  new_x -= sin(DEG_TO_RAD * m_a->alpha) * 1.0;
-	  new_y += cos(DEG_TO_RAD * m_a->alpha) * 1.0;
-	  new_z += sin(DEG_TO_RAD * m_a->beta) * 1.0;
-	  new_head = m_a->alpha + 180;
+	  new_x -= sin(DEG_TO_RAD * M_A->alpha) * speed;
+	  new_y += cos(DEG_TO_RAD * M_A->alpha) * speed;
+	  new_z += sin(DEG_TO_RAD * M_A->beta) * speed;
+	  new_head = M_A->alpha + 180;
 	  
-	} else if (m_a->key_pressed[D_KEY] == true) {
-	  new_x += sin(DEG_TO_RAD * m_a->alpha) * 1.0;
-	  new_y -= cos(DEG_TO_RAD * m_a->alpha) * 1.0;
-	  new_z -= sin(DEG_TO_RAD * m_a->beta) * 1.0;
-	  new_head = m_a->alpha;
+	} else if (M_A->key_pressed[D_KEY] == true) {
+	  new_x += sin(DEG_TO_RAD * M_A->alpha) * speed;
+	  new_y -= cos(DEG_TO_RAD * M_A->alpha) * speed;
+	  new_z -= sin(DEG_TO_RAD * M_A->beta) * speed;
+	  new_head = M_A->alpha;
 	  
-	} if (m_a->key_pressed[S_KEY] == true) {
-	  new_x -= cos(DEG_TO_RAD * m_a->alpha) * 1.0;
-	  new_y -= sin(DEG_TO_RAD * m_a->alpha) * 1.0;
+	} if (M_A->key_pressed[S_KEY] == true) {
+	  new_x -= cos(DEG_TO_RAD * M_A->alpha) * speed;
+	  new_y -= sin(DEG_TO_RAD * M_A->alpha) * speed;
 
-	  if (m_a->key_pressed[E_KEY]) {
-		new_head = m_a->alpha - 135;
-	  } else if (m_a->key_pressed[D_KEY]) {
-		new_head = m_a->alpha - 45;
+	  if (M_A->key_pressed[E_KEY]) {
+		new_head = M_A->alpha - 135;
+	  } else if (M_A->key_pressed[D_KEY]) {
+		new_head = M_A->alpha - 45;
 	  } else {
-		new_head = m_a->alpha - 90;
+		new_head = M_A->alpha - 90;
 	  }
 	  
-	} else if (m_a->key_pressed[F_KEY]) {
-	  new_x += cos(DEG_TO_RAD * m_a->alpha) * 1.0;
-	  new_y += sin(DEG_TO_RAD * m_a->alpha) * 1.0;
+	} else if (M_A->key_pressed[F_KEY]) {
+	  new_x += cos(DEG_TO_RAD * M_A->alpha) * speed;
+	  new_y += sin(DEG_TO_RAD * M_A->alpha) * speed;
 
-	  if(m_a->key_pressed[E_KEY]) {
-		new_head = m_a->alpha + 135;
-	  } else if (m_a->key_pressed[D_KEY]) {
-		new_head = m_a->alpha + 45;
+	  if(M_A->key_pressed[E_KEY]) {
+		new_head = M_A->alpha + 135;
+	  } else if (M_A->key_pressed[D_KEY]) {
+		new_head = M_A->alpha + 45;
 	  } else {
-		new_head = m_a->alpha + 90;
+		new_head = M_A->alpha + 90;
 	  }
 	}
 	pc_node.set_pos(new_x, new_y, new_z);
 	pc_node.set_hpr(new_head, 0.0f, 0.0f);
+
+	if (moving != true) {
+	  if (M_A->key_pressed[E_KEY] ||
+		  M_A->key_pressed[S_KEY] ||
+		  M_A->key_pressed[F_KEY] ||
+		  M_A->key_pressed[D_KEY]) {
+		moving = true;
+		pc_obj->anim_collection.loop("hyena-run", true);
+	  }
+	} else if (!M_A->key_pressed[E_KEY] &&
+		  !M_A->key_pressed[S_KEY] &&
+		  !M_A->key_pressed[F_KEY] &&
+		  !M_A->key_pressed[D_KEY]) {
+	  moving = false;
+	  pc_obj->anim_collection.pose("hyena-lay1", 1);
+	}
 	
-	std::cout << "PC Position: " << pc_node.get_pos() << std::endl;
-	//std::cout << "Projected cell from position: " << round_cell(pc_node.get_pos().get_x() / 0x200) << "_" <<
-	//round_cell(pc_node.get_pos().get_y() / 0x200) << std::endl;
-	//std::string find_name = to_string(round_cell(pc_node.get_pos().get_x() / 0x200)) + "_" + to_string(round_cell(pc_node.get_pos().get_y() / 0x200));
-	//std::cout << get_terrain_by_name(TerrainManager::get_instance()->vector_o_terrains, find_name).get_root() << std::endl;
+	//std::cout << "PC Position: " << pc_node.get_pos() << std::endl;
 
 	return(AsyncTask::DS_cont);
   } else {
@@ -139,33 +151,32 @@ inline AsyncTask::DoneStatus GameState::cam_rot(GenericAsyncTask* task, void* da
   bool show_ui = false;
   
   int cursor_x, cursor_y;
-  MainApp* m_a = MainApp::get_instance();
 
   //check to see if all windows are closed. prevents a thread related seg-fault (tested: Linux x86_64).
-  if (m_a->framework.all_windows_closed() == false) {
+  if (M_A->framework.all_windows_closed() == false) {
 
-	if (m_a->mouse_pressed[C_MOUSE3] == false) {
-	  m_a->props.set_cursor_hidden(false);
+	if (M_A->mouse_pressed[C_MOUSE3] == false) {
+	  M_A->props.set_cursor_hidden(false);
 	  //m_a->window->get_graphics_window()->request_properties(m_a->props); //turns vsync off?
 	  
-	  m_a->cursor_x_pos = m_a->window->get_graphics_window()->get_pointer(0).get_x();
-	  m_a->cursor_y_pos = m_a->window->get_graphics_window()->get_pointer(0).get_y();
+	  M_A->cursor_x_pos = M_A->window->get_graphics_window()->get_pointer(0).get_x();
+	  M_A->cursor_y_pos = M_A->window->get_graphics_window()->get_pointer(0).get_y();
 	}
 
-	if (m_a->mouse_pressed[C_MOUSE3] == true) {
-	  m_a->props.set_cursor_hidden(true);
+	if (M_A->mouse_pressed[C_MOUSE3] == true) {
+	  M_A->props.set_cursor_hidden(true);
 	  //m_a->window->get_graphics_window()->request_properties(m_a->props); //turns vsync off?
 	  //get cursor position
-	  cursor_x = m_a->window->get_graphics_window()->get_pointer(0).get_x();
-	  cursor_y = m_a->window->get_graphics_window()->get_pointer(0).get_y();
+	  cursor_x = M_A->window->get_graphics_window()->get_pointer(0).get_x();
+	  cursor_y = M_A->window->get_graphics_window()->get_pointer(0).get_y();
 
 	  //relative cursor movement
-	  cursor_x -= m_a->cursor_x_pos;
-	  cursor_y -= m_a->cursor_y_pos;
+	  cursor_x -= M_A->cursor_x_pos;
+	  cursor_y -= M_A->cursor_y_pos;
 
 	  //update rotation angles
-	  m_a->alpha -= cursor_x * 0.05;
-	  m_a->beta -= cursor_y * 0.05;
+	  M_A->alpha -= cursor_x * 0.05;
+	  M_A->beta -= cursor_y * 0.05;
 	
 	  //TODO: clamp when beta == 90.0
 
@@ -175,33 +186,33 @@ inline AsyncTask::DoneStatus GameState::cam_rot(GenericAsyncTask* task, void* da
 
 	  //Position camera around a point i.e. orbit as we rotate.
 	  if (player_node) {
-		MainApp::get_instance()->window->get_camera_group().set_pos(player_node,
+		M_A->window->get_camera_group().set_pos(player_node,
 																	LVecBase3(
-																	  sin(m_a->alpha*DEG_TO_RAD) * 20,
-																	  cos(MainApp::get_instance()->alpha*DEG_TO_RAD) * -20,
-																	  cos(MainApp::get_instance()->beta*DEG_TO_RAD) * 10));
+																	  sin(M_A->alpha*DEG_TO_RAD) * 3,
+																	  cos(M_A->alpha*DEG_TO_RAD) * -3,
+																	  cos(M_A->beta*DEG_TO_RAD) * 1));
 	  }
 
 	  //apply rotation to camera
-	  m_a->window->get_camera_group().set_hpr(m_a->alpha, m_a->beta, 0.0f);
+	  M_A->window->get_camera_group().set_hpr(M_A->alpha, M_A->beta, 0.0f);
 
 	  //reset cursor position
-	  m_a->window->get_graphics_window()->move_pointer(0, m_a->cursor_x_pos, m_a->cursor_y_pos);
+	  M_A->window->get_graphics_window()->move_pointer(0, M_A->cursor_x_pos, M_A->cursor_y_pos);
 	}
 	
-	if (m_a->key_pressed[ESC_KEY] == true) {
+	if (M_A->key_pressed[ESC_KEY] == true) {
 	  if (show_ui == false) {
-		m_a->mm_button_np.show();
-		m_a->exit_menu_np.show();
+		M_A->mm_button_np.show();
+		M_A->exit_menu_np.show();
 		
 		show_ui = true;
-		m_a->key_pressed[ESC_KEY] = false;
+		M_A->key_pressed[ESC_KEY] = false;
 	  } else {
-		m_a->mm_button_np.hide();
-		m_a->exit_menu_np.hide();
+		M_A->mm_button_np.hide();
+		M_A->exit_menu_np.hide();
 
 		show_ui = false;
-		m_a->key_pressed[ESC_KEY] = false;
+		M_A->key_pressed[ESC_KEY] = false;
 	  }
 	}
 
@@ -215,20 +226,37 @@ inline AsyncTask::DoneStatus GameState::cam_rot(GenericAsyncTask* task, void* da
 AsyncTask::DoneStatus GameState::terrain_collisions(GenericAsyncTask* task, void* data) {
   TerrainManager* terrains = (TerrainManager*)data;
   NodePath pc_node = player_node.get_parent();
-  int cell_x = pc_node.get_pos().get_x() / terrains->terrain_map_size;
-  int cell_y = pc_node.get_pos().get_y() / terrains->terrain_map_size;
+  int cell_x = TerrainManager::get_cell_x(pc_node.get_pos().get_x());
+  TerrainManager::r_cell_x = cell_x;
+  //pc_node.get_pos().get_x() / terrains->terrain_map_size;
+  
+  int cell_y = TerrainManager::get_cell_y(pc_node.get_pos().get_y());
+  TerrainManager::r_cell_y = cell_y;
+  //pc_node.get_pos().get_y() / terrains->terrain_map_size;
+  
   float elevation;
 
   try {
 	GeoMipTerrain* closest_terrain = terrains->v_terrains
 	  .at(cell_x)
 	  .at(cell_y);
-	elevation = closest_terrain->get_elevation(
-	  pc_node.get_pos().get_x() - (cell_x * terrains->terrain_map_size),
-	  pc_node.get_pos().get_y() - (cell_y * terrains->terrain_map_size)) * 50;
+	if (closest_terrain != NULL) {
+	  
+	  //check to make sure we aren't trying to
+	  //get the elevation to a terrain heightmap that isn't loaded yet.
+	  if (closest_terrain->heightfield().is_valid()) {
+		elevation = closest_terrain->get_elevation(
+		  pc_node.get_pos().get_x() - (cell_x * terrains->terrain_map_size),
+		  pc_node.get_pos().get_y() - (cell_y * terrains->terrain_map_size)) * 50;
+	  } else {
+		elevation = 1.0;
+	  }
 
-	if (pc_node.get_z() <= elevation) {
-	  pc_node.set_z(elevation);
+	  if (pc_node.get_z() <= elevation) {
+		pc_node.set_z(elevation);
+	  } else {
+		pc_node.set_z(pc_node.get_z() - 0.25);
+	  }
 	} else {
 	  pc_node.set_z(pc_node.get_z() - 0.25);
 	}

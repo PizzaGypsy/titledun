@@ -48,6 +48,9 @@ set(HDRS
 	src/UtilFunctions.hpp
 	src/AccumulationBuffer.hpp
 	src/LispSystem.hpp
+	src/LispAPI.hpp
+	src/ModuleSystem.hpp
+	src/FullscreenRenderCard.hpp
 )
 
 set(SRCS
@@ -65,6 +68,9 @@ set(SRCS
 	src/UtilFunctions.cpp
 	src/AccumulationBuffer.cpp
 	src/LispSystem.cpp
+	src/LispAPI.cpp
+	src/ModuleSystem.cpp
+	src/FullscreenRenderCard.cpp
 )
 
 add_executable(${PROJNAME} WIN32 ${HDRS} ${SRCS})
@@ -113,7 +119,6 @@ list(APPEND PANDA_LIBS
 target_link_libraries(${PROJNAME}
 	-lpthread
 	-lecl
-	-lgc
 	${PANDA_LIBS}
 ) 
 

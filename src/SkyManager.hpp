@@ -25,13 +25,13 @@ public:
   Fog *fog_node;
   
   Texture *sky_tex;
+  NodePath sky;
   //int sun_pitch;
   
   PT(DirectionalLight) d_light_sun;
   PT(AmbientLight) a_light;
   
 private:
-  NodePath sky;
   NodePath d_light_sun_np;
   NodePath a_light_np;
 
