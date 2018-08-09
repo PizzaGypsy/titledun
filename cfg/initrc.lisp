@@ -2,7 +2,6 @@
 
 (load "../cfg/core.lisp")
 
-(load "../cfg/terrains.lisp")
 (load "../modules/default/package.lisp")
 (load "../cfg/speciedata.lisp")
 

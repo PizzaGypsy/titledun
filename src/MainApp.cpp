@@ -55,7 +55,6 @@ void MainApp::setup_console() {
   console_text_np = window->get_aspect_2d()
 	.attach_new_node(p_console_text);
 
-  
   console_text_np.reparent_to(console_np);
   //console_text_np.set_scale(0.05);
   console_text_np.set_pos(0, 0, 1);
