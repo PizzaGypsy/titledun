@@ -35,6 +35,7 @@ void LispAPI::register_functions() {
   DEFUN("make-button", make_button, 1);
   DEFUN("gc-all-nodes", gc_all_nodes, 0);
   DEFUN("gc-node", gc_node, 1);
+  DEFUN("change-state", change_state, 1);
 }
 
 //register sky pointer with the API, so Lisp functions can get values from it.
@@ -120,4 +121,16 @@ cl_object LispAPI::gc_node(cl_object name) {
 	}
   }
   return(Cnil);
+}
+
+cl_object LispAPI::change_state(cl_object name) {
+  std::string c_name = LispSystem::str_from_cl_obj(name);
+  
+  if (M_A->p_app_state_manager->find_by_name(c_name) == NULL) {
+	return(Cnil);
+  } else {
+	M_A->p_app_state_manager->
+	  change_app_state(M_A->p_app_state_manager->find_by_name(c_name));
+	return(Ct);
+  }
 }
