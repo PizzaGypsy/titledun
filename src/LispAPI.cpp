@@ -33,6 +33,8 @@ void LispAPI::register_functions() {
   DEFUN("get-fog-color", get_fog_color, 0);
   DEFUN("set-fog-color", set_fog_color, 1);
   DEFUN("make-button", make_button, 1);
+  DEFUN("gc-all-nodes", gc_all_nodes, 0);
+  DEFUN("gc-node", gc_node, 1);
 }
 
 //register sky pointer with the API, so Lisp functions can get values from it.
@@ -55,6 +57,10 @@ void* LispAPI::return_pointer_address(cl_object ptr) {
 }
 
 cl_object LispAPI::cmd;
+std::vector<NodePath*> LispAPI::cl_nodes;
+NodePath sum_node;
+
+//Makes a button in panda from ecl
 cl_object LispAPI::make_button(cl_object tmp) {
   //Let us get what we need for our button, first.
 
@@ -73,7 +79,7 @@ cl_object LispAPI::make_button(cl_object tmp) {
 
   btn->setup(name);
   
-  NodePath sum_node = M_A->window->get_aspect_2d().attach_new_node(btn);
+  sum_node = M_A->window->get_aspect_2d().attach_new_node(btn);
   sum_node.set_scale(scale);
   sum_node.set_pos(posx, 0, posy);
 
@@ -81,10 +87,37 @@ cl_object LispAPI::make_button(cl_object tmp) {
 							"button press",
 							&btn_fun,
 							(void*)cmd);//squish
-
-  return(Cnil);
+  
+  cl_nodes.resize(cl_nodes.size()+1, NULL);
+  cl_nodes.at(cl_nodes.size()-1) = &sum_node;
+  return(Ct);
 }
 
+//evals whatever cl_object is passed to it. For use with button presses or other events.
 void LispAPI::btn_fun(const Event* e, void* data) {
   cl_safe_eval(cmd, Cnil, Cnil);
+}
+
+//deletes all nodes in our vector. Useful for cleaning up after a program close event.
+cl_object LispAPI::gc_all_nodes() {
+  for(int x=0 ; x<cl_nodes.size() ; x++) {
+	if(cl_nodes.at(x) != NULL) {
+	  cl_nodes.at(x)->remove_node();
+	}
+  }
+  return(Ct);
+}
+
+//this function deletes a node in our vector, by name.
+cl_object LispAPI::gc_node(cl_object name) {
+  std::string c_name = LispSystem::str_from_cl_obj(name);
+  
+  //this runs in linear complexity + string sizes. may be problematic with too many nodes...
+  for(int x=0 ; x<cl_nodes.size() ; x++) {
+	if(c_name.compare(cl_nodes.at(x)->get_name()) == 0) {
+	  cl_nodes.at(x)->remove_node();
+	  return(Ct);
+	}
+  }
+  return(Cnil);
 }

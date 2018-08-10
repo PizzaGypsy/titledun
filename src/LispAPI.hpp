@@ -27,7 +27,11 @@ public:
   static SkyManager* p_sky;
   static TerrainManager* p_terr;
   static void btn_fun(const Event* e, void* data);
+  static cl_object gc_all_nodes();
+  static cl_object gc_node(cl_object name);
 
   static cl_object cmd;
+  static std::vector<NodePath*> cl_nodes;
+  
 private:
 };
