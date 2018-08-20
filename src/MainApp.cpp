@@ -30,6 +30,10 @@ MainApp::MainApp()
 
 MainApp::~MainApp()
 {
+  rEventManager::Shutdown();
+  r_context->RemoveReference();
+  Rocket::Core::Shutdown();
+  
   p_app_state_manager->exit_app_state(p_app_state_manager->find_by_name("GameState"));
   delete p_app_state_manager;
 
@@ -96,4 +100,29 @@ void MainApp::start()
   //framework.enable_default_keys();
 
   framework.main_loop();
+}
+
+void MainApp::setup_rocket() {
+#ifdef HAVE_ROCKET_PYTHON
+  Py_Initialize();
+#endif
+  r_region = RocketRegion::make("Panda Rocket", window->get_graphics_window());
+  r_region->set_active(true);
+  r_region->set_sort(10000);
+
+  rih = new RocketInputHandler();
+  window->get_mouse().attach_new_node(rih);
+  r_region->set_input_handler(rih);
+
+  Rocket::Controls::Initialise();
+
+  r_context = r_region->get_context();
+  Rocket::Debugger::Initialise(r_context);
+  
+  Rocket::Core::FontDatabase::LoadFontFace("../cfg/ui/Delicious-Roman.otf");
+
+  r_instancer = new rEventInstancer();
+  Rocket::Core::Factory::RegisterEventListenerInstancer(r_instancer);
+  r_instancer->RemoveReference();
+
 }

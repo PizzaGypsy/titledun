@@ -19,7 +19,7 @@ int main(int argc, char** argv) {
   app->framework.set_window_title("Untitled");
 
   app->window = app->framework.open_window();
-
+  app->setup_rocket();
   app->start();
   
   app->reset_instance();

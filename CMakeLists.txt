@@ -31,6 +31,9 @@ endif ()
 set(PANDA_INCLUDE "/usr/local/include/panda3d" CACHE FILEPATH "Location of Panda3d sources.")
 set(PANDA_PREFIX "/usr/local/lib/panda3d/" CACHE FILEPATH "The path prefix to Panda3d libraries.")
 
+set(ROCKET_INCLUDE "/usr/local/include/Rocket/" CACHE FILEPATH "The location of libRocket sources.")
+set(ROCKET_PREFIX "/usr/local/lib/" CACHE FILEPATH "The path prefix to libRocket libraries.")
+
 #link_directories(${PANDA_LIBS})
 
 set(HDRS
@@ -51,6 +54,10 @@ set(HDRS
 	src/LispAPI.hpp
 	src/ModuleSystem.hpp
 	src/FullscreenRenderCard.hpp
+	#src/RocketEventHandler.hpp
+	src/RocketEventInstancer.hpp
+	src/RocketEventListener.hpp
+	src/RocketEventManager.hpp
 )
 
 set(SRCS
@@ -71,6 +78,10 @@ set(SRCS
 	src/LispAPI.cpp
 	src/ModuleSystem.cpp
 	src/FullscreenRenderCard.cpp
+	#src/RocketEventHandler.cpp
+	src/RocketEventInstancer.cpp
+	src/RocketEventListener.cpp
+	src/RocketEventManager.cpp
 )
 
 add_executable(${PROJNAME} WIN32 ${HDRS} ${SRCS})
@@ -82,6 +93,7 @@ if (CMAKE_BUILD_TYPE STREQUAL "Debug")
 endif ()
 
 include_directories(
+	#${ROCKET_INCLUDE}
 	${PANDA_INCLUDE}
 	if (PANDA_HAS_PYTHON)
 		${PYTHON_INCLUDE}
@@ -114,11 +126,18 @@ endif ()
 
 list(APPEND PANDA_LIBS
 	${PANDA_PREFIX}/libp3direct.${SUFFIX_DLL}
-	${PANDA_PREFIX}/libp3eggbase.${SUFFIX_STATIC})
+	${PANDA_PREFIX}/libp3eggbase.${SUFFIX_STATIC}
+	${PANDA_PREFIX}/libp3rocket.${SUFFIX_DLL})
+
+set(ROCKET_LIBS
+	${ROCKET_PREFIX}/libRocketCore.${SUFFIX_DLL}
+	${ROCKET_PREFIX}/libRocketDebugger.${SUFFIX_DLL}
+	${ROCKET_PREFIX}/libRocketControls.${SUFFIX_DLL})
 
 target_link_libraries(${PROJNAME}
 	-lpthread
 	-lecl
+	${ROCKET_LIBS}
 	${PANDA_LIBS}
 ) 
 

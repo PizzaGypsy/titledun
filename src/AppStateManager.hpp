@@ -10,8 +10,7 @@
 class AppStateManager : public AppStateListener
 {
 public:
-  typedef struct
-  {
+  typedef struct {
 	std::string name;
 	AppState* state;
   } state_info;
@@ -34,10 +33,10 @@ public:
   void pop_all_and_push_app_state(AppState* state);
 
 protected:
-	void init(AppState *state);
+  void init(AppState *state);
 
-	std::vector<AppState*> active_state_stack;
-	std::vector<state_info>	states;
-	bool b_shutdown;
+  std::vector<AppState*> active_state_stack;
+  std::vector<state_info>	states;
+  bool b_shutdown;
 };
 

@@ -13,6 +13,7 @@
 #include <thread>
 #include <mutex>
 #include <future>
+#include <functional>
 
 #include <pandaFramework.h>
 #include <pandaSystem.h>
@@ -57,9 +58,20 @@
 #include <auto_bind.h>
 #include <animControlCollection.h>
 
+#include <rocketRegion.h>
+#include <Rocket/Core/Factory.h>
+#include <Rocket/Core.h>
+#include <Rocket/Controls.h>
+#include <Rocket/Debugger.h>
+#include <Rocket/Core/EventListener.h>
+
 #include "ModuleSystem.hpp"
 #include "AppStateManager.hpp"
 #include "GraphicalInterface.hpp"
+
+#include "RocketEventInstancer.hpp"
+#include "RocketEventManager.hpp"
+
 #include "UtilFunctions.hpp"
 
 #define M_A MainApp::get_instance()
@@ -74,11 +86,17 @@ public:
 
   WindowProperties props;
 
+  PT(RocketRegion) r_region;
+  PT(RocketInputHandler) rih;
+  Rocket::Core::Context* r_context;
+  rEventInstancer* r_instancer;
+
   static MainApp* get_instance();
   
   static void reset_instance();
 
   void start();
+  void setup_rocket();
 
   float alpha = 0.0f, beta = 0.0f;
   int cursor_x_pos = 0, cursor_y_pos = 0;

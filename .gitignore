@@ -11,3 +11,6 @@ CMakeCache.txt
 *.fas
 modules/
 cfg/quicklisp
+
+*.otf
+*.tga

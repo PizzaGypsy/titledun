@@ -17,6 +17,7 @@ public:
   void exit();
 
 private:
+  void ui_callbacks();
   static void play_clicked(const Event *ev, void *data);
   static void cgen_clicked(const Event *ev, void *data);
 
