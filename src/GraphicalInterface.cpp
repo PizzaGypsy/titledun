@@ -19,7 +19,8 @@ void GraphicalInterface::menu_controls(const Event* e, void* data) {
   }
 
   //escape
-  else if (e->get_name() == "escape" && M_A->p_main_menu_button != NULL) {
+  /*
+  else if (e->get_name() == "escape" && M_A->p_main_menu_button!=NULL) {
 	if (show_mmenu == false) {
 	  M_A->mm_button_np.show();
 	  M_A->exit_menu_np.show();
@@ -30,8 +31,16 @@ void GraphicalInterface::menu_controls(const Event* e, void* data) {
 	  M_A->exit_menu_np.hide();
 	  show_mmenu = false;
 	}
+	}*/
+  else if (e->get_name() == "escape") {
+	if (M_A->mainmenu!=NULL) {
+	  std::cout<<"Aa"<<std::endl;
+	  if (M_A->mainmenu->IsVisible())
+		M_A->mainmenu->Hide();
+	  else
+		M_A->mainmenu->Show();
+	}
   }
-  
 }
 
 void GraphicalInterface::console_callback(const Event *e, void *data) {

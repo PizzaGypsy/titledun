@@ -4,7 +4,6 @@
 */
 
 AsyncTask::DoneStatus GameState::move_player(GenericAsyncTask* task, void* data) {
-  
   if (M_A->framework.all_windows_closed() == false) {
 	//player_node.get_parent().get_node(0)->reset_prev_transform();
 	NodePath pc_node = player_node.get_parent();
@@ -63,6 +62,7 @@ AsyncTask::DoneStatus GameState::move_player(GenericAsyncTask* task, void* data)
 
 bool moving = true;
 AsyncTask::DoneStatus GameState::move_player_noclip(GenericAsyncTask* task, void* data) {
+
   PlayerCharacter* pc_obj = (PlayerCharacter*)data;
   float speed = 0.5;
   
@@ -246,8 +246,8 @@ AsyncTask::DoneStatus GameState::terrain_collisions(GenericAsyncTask* task, void
 	  //get the elevation to a terrain heightmap that isn't loaded yet.
 	  if (closest_terrain->heightfield().is_valid()) {
 		elevation = closest_terrain->get_elevation(
-		  pc_node.get_pos().get_x() - (cell_x * terrains->terrain_map_size),
-		  pc_node.get_pos().get_y() - (cell_y * terrains->terrain_map_size)) * 50;
+		  pc_node.get_pos().get_x() - (cell_x * (terrains->terrain_map_size - 1)),
+		  pc_node.get_pos().get_y() - (cell_y * (terrains->terrain_map_size - 1))) * 50;
 	  } else {
 		elevation = 1.0;
 	  }

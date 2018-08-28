@@ -1,5 +1,6 @@
 #include "MenuState.hpp"
 #include "RocketEventManager.hpp"
+#include "TerrainCompiler.hpp"
 
 void MenuState::play_clicked(const Event *ev, void *data) {
   PGButton* CurrentButton=(PGButton *)data;
@@ -35,6 +36,7 @@ void MenuState::exit() {
 }
 
 void MenuState::ui_callbacks() {
+  //here we create a lambda function and send it as an event callback.
   rEventManager::RegisterEventHandler("pandarocket", [](Rocket::Core::Event& event,
 														const Rocket::Core::String& value){
 													   if(value=="play"){
@@ -48,6 +50,14 @@ void MenuState::ui_callbacks() {
 														   change_app_state(
 															 M_A->p_app_state_manager->
 															 find_by_name("CharacterGen"));
+													   }
+													   else if(value=="genmaps") {
+														 PNMImage* big_image = new PNMImage("big.png");
+														 big_image->
+														   set_color_type(PNMImage::ColorType::CT_grayscale);
+														 TerrainCompiler::generate_heightmaps((*big_image),
+																							  ecl_to_int(LispSystem::lisp("*terrain-map-size*"))-1);
+														 delete big_image;
 													   }
 													   else if(value=="exit"){
 														 M_A->p_app_state_manager->

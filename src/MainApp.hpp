@@ -8,6 +8,7 @@
 
 #include <math.h>
 #include <iostream>
+#include <algorithm>
 #include <vector>
 #include <stdlib.h>
 #include <thread>
@@ -94,6 +95,7 @@ public:
   static MainApp* get_instance();
   
   static void reset_instance();
+  Rocket::Core::ElementDocument* mainmenu = NULL;
 
   void start();
   void setup_rocket();
@@ -102,7 +104,7 @@ public:
   int cursor_x_pos = 0, cursor_y_pos = 0;
 
   bool mouse_pressed[3] = {false, false, false};
-  bool key_pressed[6] = {false, false, false, false, false, false};
+  bool key_pressed[222];
 
   AppStateManager* p_app_state_manager;
 

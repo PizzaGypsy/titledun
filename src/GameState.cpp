@@ -1,4 +1,5 @@
 #include "GameState.hpp"
+#include "RocketEventManager.hpp"
 
 const float DEG_TO_RAD = 0.01745329252;
 NodePath player_node;
@@ -6,6 +7,7 @@ NodePath player_node;
 #include "GameStateTasks.cpp"
 
 GameState::GameState() {
+  ui_callbacks();
 }
 
 void GameState::make_ui_elements() {
@@ -39,11 +41,36 @@ void GameState::make_ui_elements() {
 							M_A->p_exit_menu_button);
 }
 
+void GameState::ui_callbacks() {
+  rEventManager::RegisterEventHandler("mainmenu", [](Rocket::Core::Event& event,
+													 const Rocket::Core::String& value){
+													if(value=="title") {
+													  M_A->p_app_state_manager->
+														change_app_state(
+														  M_A->p_app_state_manager->
+														  find_by_name("MenuState"));
+													}
+													
+													else if(value=="exit") {
+													  M_A->p_app_state_manager->
+														change_app_state(
+														  M_A->p_app_state_manager->
+														  find_by_name("MenuState"));
+													  M_A->framework.set_exit_flag();
+													  M_A->mainmenu = NULL;
+													}
+												  });
+}
+
 /*static*/ NodePath GameState::panda_actor;
 
 void GameState::enter() {
   std::cout << "Entering gamestate" << std::endl;
-
+  M_A->mainmenu = rEventManager::LoadWindow("mainmenu");
+  if(M_A->mainmenu) {
+	M_A->mainmenu->Hide();
+  }
+  
   Controls::define_keys();
   make_ui_elements();
 

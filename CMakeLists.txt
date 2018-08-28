@@ -54,10 +54,10 @@ set(HDRS
 	src/LispAPI.hpp
 	src/ModuleSystem.hpp
 	src/FullscreenRenderCard.hpp
-	#src/RocketEventHandler.hpp
 	src/RocketEventInstancer.hpp
 	src/RocketEventListener.hpp
 	src/RocketEventManager.hpp
+	src/TerrainCompiler.hpp
 )
 
 set(SRCS
@@ -78,10 +78,10 @@ set(SRCS
 	src/LispAPI.cpp
 	src/ModuleSystem.cpp
 	src/FullscreenRenderCard.cpp
-	#src/RocketEventHandler.cpp
 	src/RocketEventInstancer.cpp
 	src/RocketEventListener.cpp
 	src/RocketEventManager.cpp
+	src/TerrainCompiler.cpp
 )
 
 add_executable(${PROJNAME} WIN32 ${HDRS} ${SRCS})

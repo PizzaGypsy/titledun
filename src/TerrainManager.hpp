@@ -13,6 +13,15 @@ public:
   TerrainManager();
   ~TerrainManager();
 
+  static bool t_brute_force;
+  static bool t_border_stitch;
+  static int t_block_size;
+  static int t_near_lod;
+  static int t_far_lod;
+  static int t_min_q;
+
+  static void get_terrain_settings();
+
   void build_terrains();
   int parse_terrains_local();
   static void set_defaults(GeoMipTerrain* terrain, const std::string name, const std::string texture, int x, int y);
@@ -27,7 +36,7 @@ public:
   int load_cells_nearby();
   int load_cell(int cell_x, int cell_y);
 
-  static const int terrain_map_size = 0x400; //0x200
+  static int terrain_map_size;
   static int r_cell_x;
   static int r_cell_y;
 
@@ -45,6 +54,7 @@ private:
   NodePath terrain_objects_np = MainApp::get_instance()->window->get_render().attach_new_node("Terrain Node");
   static TerrainManager* p_instance;
 
+  static inline AsyncTask::DoneStatus update_lods(GenericAsyncTask* task, void* data);
   static inline AsyncTask::DoneStatus update_terrain(GenericAsyncTask* task, void* data);
   static AsyncTask::DoneStatus set_defaults_async(GenericAsyncTask* task, void* data);
   static void cleanup_loader(GenericAsyncTask* task, bool b, void* data);
@@ -56,6 +66,7 @@ private:
   CollisionTraverser traverser;
 
   PT(AsyncTask) p_update_terrain = NULL;
+  PT(AsyncTask) p_update_lod = NULL;
 
   int check_cfg_vars();
 };

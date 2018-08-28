@@ -11,9 +11,10 @@ public:
   static void Shutdown();
   static void RegisterEventHandler(const Rocket::Core::String& handler_name,
 								   std::function<void (Rocket::Core::Event&, const Rocket::Core::String&)> f);
+  static void UnregisterEventHandler(const Rocket::Core::String& handler_name);
   
   static void ProcessEvent(Rocket::Core::Event& event, const Rocket::Core::String& value);
-  static bool LoadWindow(const Rocket::Core::String& window_name);
+  static Rocket::Core::ElementDocument* LoadWindow(const Rocket::Core::String& window_name);
 
 private:
   std::vector<ProcessEventsFun> f_handlers;

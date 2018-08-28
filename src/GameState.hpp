@@ -30,7 +30,7 @@ public:
 
   TerrainManager* p_terrains = NULL;
   SkyManager* p_sky = NULL;
-  
+
 private:
   //  PT (NodePath) panda_actor;
   //  PT (NodePath) player_node;
@@ -40,6 +40,7 @@ private:
   static AsyncTask::DoneStatus terrain_collisions(GenericAsyncTask* task, void* data);
 
   void make_ui_elements();
+  void ui_callbacks();
 
   PandaAccum* p_acc_buffer = NULL;
 

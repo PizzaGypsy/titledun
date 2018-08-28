@@ -26,6 +26,7 @@ MainApp::MainApp()
 	p_console_text = NULL;
 	p_main_menu_button = NULL;
 	p_exit_menu_button = NULL;
+	std::fill(key_pressed, key_pressed+222, false);
 }
 
 MainApp::~MainApp()

@@ -40,3 +40,45 @@ void texture_gauss_filter(Texture* tex) {
   temp_image.gaussian_filter(0.5);
   tex->load(temp_image);
 }
+
+PNMImage* chunk_image(const PNMImage& big_i, int x, int y, int chunk_size) {
+  PNMImage* output = new PNMImage(chunk_size+1, chunk_size+1);
+  output->remove_alpha();
+  output->set_color_type(PNMImage::ColorType::CT_grayscale);
+
+  const int fromx = x*chunk_size;
+  const int fromy = y*chunk_size;
+  
+  int itx, ity;
+  for(ity=fromy ; ity<=fromy+chunk_size ; ity++) {
+	for(itx=fromx ; itx<=fromx+chunk_size ; itx++) {
+	  
+	  if(ity-fromy==0 && y!=0) {
+		output->set_xel_val(itx-fromx, 0, big_i.get_xel_val(itx, ity-1));
+	  } else if(itx-fromx==0 && x!=0) {
+		output->set_xel_val(0, ity-fromy, big_i.get_xel_val(itx-1, ity));
+
+		/*
+	  } else if(ity-fromy==1 && x!=0) {
+		output->set_xel_val(itx-fromx, 1, big_i.get_xel_val(itx-2, ity));
+	  } else if(itx-fromx==1 && y!=0) {
+		output->set_xel_val(1, ity-fromy, big_i.get_xel_val(itx, ity-2));
+
+	  } else if(ity-fromy==2 && x!=0) {
+		output->set_xel_val(itx-fromx, 2, big_i.get_xel_val(itx-3, ity));
+	  } else if(itx-fromx==2 && y!=0) {
+		output->set_xel_val(2, ity-fromy, big_i.get_xel_val(itx, ity-3));
+
+	  } else if(ity-fromy==3 && x!=0) {
+		output->set_xel_val(itx-fromx, 3, big_i.get_xel_val(itx-4, ity));
+	  } else if(itx-fromx==3 && y!=0) {
+		output->set_xel_val(3, ity-fromy, big_i.get_xel_val(itx, ity-4));
+		*/
+		
+	  } else {
+		output->set_xel_val(itx-fromx, ity-fromy, big_i.get_xel_val(itx, ity));
+	  }
+	}
+  }
+  return(output);
+}

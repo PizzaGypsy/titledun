@@ -6,8 +6,31 @@ int TerrainManager::r_cell_y = 0;
 int TerrainManager::p_cell_x = 0;
 int TerrainManager::p_cell_y = 0;
 
+int TerrainManager::terrain_map_size = 1025;
+bool TerrainManager::t_brute_force = true;
+bool TerrainManager::t_border_stitch = true;
+int TerrainManager::t_block_size = 256;
+int TerrainManager::t_near_lod = 8;
+int TerrainManager::t_far_lod = 1280;
+int TerrainManager::t_min_q = 0;
+
 void TerrainManager::cleanup_loader(GenericAsyncTask* task, bool b, void* data) {
   AsyncTaskManager::get_global_ptr()->remove(task);
+}
+
+AsyncTask::DoneStatus TerrainManager::update_lods(GenericAsyncTask* task, void* data) {
+  TerrainManager* tm = (TerrainManager*)data;
+
+  if (tm->p_b_world_threads->get_num_tasks() == 0) {
+	for (int x=0 ; x<tm->v_terrains.size() ; x++) {
+	  for (int y=0 ; y<tm->v_terrains.size() ; y++) {
+		if (tm->v_terrains[x][y] != NULL) {
+		  tm->v_terrains[x][y]->update();
+		}
+	  }
+	}
+  }
+  return(AsyncTask::DS_cont);
 }
 
 Mutex* mut = new Mutex("locker");
@@ -22,21 +45,27 @@ AsyncTask::DoneStatus TerrainManager::set_defaults_async(GenericAsyncTask* task,
   prefix += ".png";
 
   tt->p_terrain->set_heightfield(Filename(prefix));
+
+  //for some reason, our heightmap gets rotated on the y-axis. Let's fix that.
+  tt->p_terrain->heightfield().flip(false, true, false);
   
   tt->p_terrain->get_root().set_tex_scale(TextureStage::get_default(), 8, 8);
 
   //placeholder texture. TODO: add texture system
   Texture* wood_tex = TexturePool::get_global_ptr()->load_texture("../media/textures/wood_plain.jpg", 0, false);
   tt->p_terrain->get_root().set_texture(wood_tex, 0);
-  
-  tt->p_terrain->set_bruteforce(true);
-  tt->p_terrain->set_block_size(0x100);
-  tt->p_terrain->set_near(0x8);
-  tt->p_terrain->set_far(0x500);
-  tt->p_terrain->set_focal_point(M_A->window->get_camera_group());
+
   tt->p_terrain->get_root().set_sz(50);
-  tt->p_terrain->get_root().set_pos((tt->cell_x * terrain_map_size), (tt->cell_y * terrain_map_size), 0);
-  tt->p_terrain->set_min_level(2);
+  tt->p_terrain->set_bruteforce(t_brute_force);
+  tt->p_terrain->set_border_stitching(t_border_stitch);
+  tt->p_terrain->set_block_size(t_block_size);
+  tt->p_terrain->set_near(t_near_lod);
+  tt->p_terrain->set_far(t_far_lod);
+  tt->p_terrain->set_min_level(t_min_q);
+  
+  tt->p_terrain->set_focal_point(M_A->window->get_camera_group());
+  tt->p_terrain->get_root().set_pos((tt->cell_x * (terrain_map_size-1)), (tt->cell_y * (terrain_map_size-1)), 0);
+  
   tt->p_terrain->generate();
 
   delete tt;
@@ -66,6 +95,7 @@ TerrainManager::TerrainManager() {
   p_b_world_threads->set_num_threads(1);
   p_b_world_threads->set_frame_budget(0.05);
   p_b_world_threads->set_thread_priority(TP_low);
+  get_terrain_settings();
 }
 
 TerrainManager::~TerrainManager() {
@@ -265,8 +295,10 @@ void TerrainManager::build_terrains() {
   
   //keep updating terrain w/ task
   p_update_terrain = new GenericAsyncTask("Updates terrain", (&update_terrain), this);
+  p_update_lod = new GenericAsyncTask("Updates terrain LODs", (&update_lods), this);
   //p_update_terrain->set_task_chain("worldThreads");
   AsyncTaskManager::get_global_ptr()->add(p_update_terrain);
+  AsyncTaskManager::get_global_ptr()->add(p_update_lod);
 
   p_terrain_node->show();
 }
@@ -296,4 +328,14 @@ int TerrainManager::get_cell_x(int xpos) {
 
 int TerrainManager::get_cell_y(int ypos) {
   return(ypos / TerrainManager::terrain_map_size);
+}
+
+void TerrainManager::get_terrain_settings() {
+  terrain_map_size = ecl_to_int(LispSystem::lisp("*terrain-map-size*"));
+  t_brute_force = ecl_to_bool(LispSystem::lisp("*terrain-bruteforce*"));
+  t_border_stitch = ecl_to_bool(LispSystem::lisp("*terrain-border-stitching*"));
+  t_block_size = ecl_to_int(LispSystem::lisp("*terrain-block-size*"));
+  t_near_lod = ecl_to_int(LispSystem::lisp("*terrain-near-lod*"));
+  t_far_lod = ecl_to_int(LispSystem::lisp("*terrain-far-lod*"));
+  t_min_q = ecl_to_int(LispSystem::lisp("*terrain-min-quality*"));
 }

@@ -1,6 +1,16 @@
-(defparameter *max-x* 4)
-(defparameter *max-y* 4)
+(defparameter *max-x* 14)
+(defparameter *max-y* 14)
 (defparameter *terrains* (make-array `(,*max-x* ,*max-y*)))
+
+;;global terrain options
+(defparameter *terrain-map-size* 257) ;use a power of two + 1. do not change after terrain has been created.
+
+(defparameter *terrain-bruteforce* nil)
+(defparameter *terrain-border-stitching* t)
+(defparameter *terrain-block-size* 64)
+(defparameter *terrain-near-lod* 30)
+(defparameter *terrain-far-lod* 1024)
+(defparameter *terrain-min-quality* 0)
 
 (defstruct terrain
 	name
@@ -23,7 +33,7 @@
 				(setf (aref *terrains* x2 y2) (generate-terrain-block x2 y2)))))
 
 (generate-terrain-array *max-x* *max-y*)
-(setf (terrain-texture1 (aref *terrains* 1 1)) "unexisting_tex")
+;;(setf (terrain-texture1 (aref *terrains* 1 1)) "unexisting_tex")
 
 #|
 ;;I really oughta write a function to make these for me.
