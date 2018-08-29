@@ -1,4 +1,7 @@
 set(PROJNAME "panda")
+set(STASERVER "panda-state-server")
+set(DATSERVER "panda-data-server")
+set(SCRSERVER "panda-script-server")
 
 cmake_minimum_required(VERSION 2.6)
 
@@ -58,6 +61,7 @@ set(HDRS
 	src/RocketEventListener.hpp
 	src/RocketEventManager.hpp
 	src/TerrainCompiler.hpp
+	src/Network.hpp
 )
 
 set(SRCS
@@ -82,11 +86,44 @@ set(SRCS
 	src/RocketEventListener.cpp
 	src/RocketEventManager.cpp
 	src/TerrainCompiler.cpp
+	src/Network.cpp
 )
 
 add_executable(${PROJNAME} WIN32 ${HDRS} ${SRCS})
 
 set_target_properties(${PROJNAME} PROPERTIES DEBUG_POSTFIX _d)
+
+set(STAHDRS
+	)
+
+set(STASRCS
+	src/servers/state-server/main.cpp
+	)
+
+add_executable(${STASERVER} WIN32 ${STAHDRS} ${STASRCS})
+set_target_properties(${STASERVER} PROPERTIES DEBUG_POSTFIX _d)
+
+set(DATHDRS
+	)
+
+set(DATSRCS
+	src/servers/data-server/main.cpp
+	)
+
+add_executable(${DATSERVER} WIN32 ${DATHDRS} ${DATSRCS})
+
+set_target_properties(${DATSERVER} PROPERTIES DEBUG_POSTFIX _d)
+
+set(SCRHDRS
+	)
+
+set(SCRSRCS
+	src/servers/script-server/main.cpp
+	)
+
+add_executable(${SCRSERVER} WIN32 ${SCRHDRS} ${SCRSRCS})
+
+set_target_properties(${SCRSERVER} PROPERTIES DEBUG_POSTFIX _d)
 
 if (CMAKE_BUILD_TYPE STREQUAL "Debug")
 	target_compile_definitions(${PROJNAME} PRIVATE VVV=1)
@@ -140,6 +177,18 @@ target_link_libraries(${PROJNAME}
 	${ROCKET_LIBS}
 	${PANDA_LIBS}
 ) 
+
+target_link_libraries(${STASERVER}
+	-pthread
+	${PANDA_LIBS})
+
+target_link_libraries(${DATSERVER}
+	-pthread
+	${PANDA_LIBS})
+
+target_link_libraries(${SCRSERVER}
+	-pthread
+	${PANDA_LIBS})
 
 file(MAKE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/bin)
 file(MAKE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/media)

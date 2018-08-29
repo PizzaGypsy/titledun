@@ -41,16 +41,15 @@ void PlayerCharacter::load_anims() {
   run_anim_name += "hyena";  //species;
   run_anim_name += "-run.egg";
   
-  M_A->window->load_model(character, "../media/models/hyena-lay1.egg");
+  //M_A->window->load_model(character, "../media/models/hyena-lay1.egg");
   M_A->window->load_model(character, run_anim_name);
   
   auto_bind(character.node(), anim_collection);
-  anim_collection.loop_all(true);
-  
-  anim_collection.store_anim(anim_collection.get_anim(0), "hyena-lay1");
+  anim_collection.loop_all(false);
+
+  anim_collection.store_anim(anim_collection.get_anim(0), "Armature.1");
+  //anim_collection.store_anim(anim_collection.get_anim(1), "hyena-lay1");
   anim_collection.store_anim(anim_collection.get_anim(1), "hyena-run");
-  anim_collection.unbind_anim(anim_collection.get_anim(0)->get_name());
-  anim_collection.unbind_anim(anim_collection.get_anim(0)->get_name());
   
   if (anim_collection.get_num_anims() > 0) {
 	for (int n=0 ; n<anim_collection.get_num_anims() ; n++) {
@@ -58,7 +57,11 @@ void PlayerCharacter::load_anims() {
 	}
   } else {
 	std::cout << "no anims!" << std::endl;
-  }  
+  }
+  
+  anim_collection.unbind_anim(anim_collection.get_anim(0)->get_name());
+  anim_collection.unbind_anim(anim_collection.get_anim(0)->get_name());
+  //anim_collection.unbind_anim(anim_collection.get_anim(0)->get_name());
 }
 
 void PlayerCharacter::unload_anims() {

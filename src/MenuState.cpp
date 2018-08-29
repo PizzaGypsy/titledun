@@ -1,6 +1,7 @@
 #include "MenuState.hpp"
 #include "RocketEventManager.hpp"
 #include "TerrainCompiler.hpp"
+#include "Network.hpp"
 
 void MenuState::play_clicked(const Event *ev, void *data) {
   PGButton* CurrentButton=(PGButton *)data;
@@ -18,6 +19,7 @@ void MenuState::cgen_clicked(const Event *ev, void *data) {
 
 MenuState::MenuState() {
   ui_callbacks();
+  Network* net = new Network();
 }
 
 void MenuState::enter() {

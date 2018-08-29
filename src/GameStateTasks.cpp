@@ -136,7 +136,8 @@ AsyncTask::DoneStatus GameState::move_player_noclip(GenericAsyncTask* task, void
 		  !M_A->key_pressed[F_KEY] &&
 		  !M_A->key_pressed[D_KEY]) {
 	  moving = false;
-	  pc_obj->anim_collection.pose("hyena-lay1", 1);
+	  //pc_obj->anim_collection.pose("hyena-lay1", 1);
+	  pc_obj->anim_collection.pose("Armature.1", 0);
 	}
 	
 	//std::cout << "PC Position: " << pc_node.get_pos() << std::endl;
